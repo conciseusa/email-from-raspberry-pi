@@ -28,12 +28,12 @@ def read_Email_Settings():
         config.optionxform=str   #By default config returns keys from Settings file in lower case. This line preserves the case for keys
         config.read(settings_File_Path)
 
+        global SMTP_SERVER
+        global SMTP_PORT
         global FROM_ADD
         global USERNAME
         global PASSWORD
-        global SMTP_SERVER
-        global SMTP_PORT
-        
+
         SMTP_SERVER = config.get("EMAIL","SMTP_ADD")
         SMTP_PORT = config.get("EMAIL","SMTP_PORT")
         FROM_ADD = config.get("EMAIL","FROM_ADD")
@@ -88,8 +88,3 @@ class Class_eMail():
     def __del__(self):
         self.session.close()
         del self.session
-
-
-
-
-
