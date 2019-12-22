@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from time import sleep
 from datetime import datetime
 import RPi.GPIO as GPIO
@@ -18,22 +20,28 @@ def my_callback(channel):
         if GPIO.input(26): # and check again the input
             now = datetime.now()
             #timestamp = datetime.timestamp(now)
-            print(now.isoformat(), "Movement!")
-            email = Class_eMail()
-            email.send_Text_Mail(To_Email_ID, 'Office Movement!', now.isoformat() + "Movement!")
-            del email
+            print(now.isoformat(), " Movement!")
+
             #captureImage()
             #camera = picamera.PiCamera()
             #camera.capture(now.isoformat()+'snapshot.jpg')
             
-            subprocess.call("raspistill -o "+now.isoformat()+"cam.jpg", shell=True)
+            pic_file = now.strftime("%Y-%m-%dT%H-%M-%S")+"cam.jpg"
+            # fix raspistill error caused by full rez
+            # https://www.raspberrypi.org/forums/viewtopic.php?t=232533#p1478436
+            subprocess.call("raspistill -o "+pic_file, shell=True)
+
+            email = Class_eMail()
+            email.send_HTML_Attachment_Mail(To_Email_ID, 'Movement Detected!', now.isoformat() + " Movement!", pic_file)
+            del email
 
             # stop detection for x sec
             GPIO.remove_event_detect(26)
-            sleep(60)
+            sleep(15)
             GPIO.add_event_detect(26, GPIO.RISING, callback=my_callback, bouncetime=300)
 
 GPIO.add_event_detect(26, GPIO.RISING, callback=my_callback, bouncetime=300)
 
 while True:
+    sleep(1)
     pass
