@@ -1,16 +1,17 @@
 
 ##------------------------------------------
-##--- Author: Pradeep Singh
+##--- Author: Pradeep Singh updated by Walter Spurgiasz
 ##--- Blog: https://iotbytes.wordpress.com/programmatically-send-e-mail-from-raspberry-pi-using-python-and-gmail/
-##--- Date: 21st Feb 2017
-##--- Version: 1.0
-##--- Python Ver: 2.7
-##--- Description: This python code will send Plain Text and HTML based emails using Gmail SMTP server
+##--- Date: 21st Dec 2019
+##--- Version: 2.0
+##--- Python Ver: 3.5
+##--- Description: This python code will send Plain Text and HTML based emails using SMTP server
 ##------------------------------------------
 
 
-import ConfigParser, inspect, os
+import configparser, inspect, os
 import smtplib
+import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -24,7 +25,7 @@ settings_File_Path =  os.path.join(settings_Dir, 'settings.ini')
 def read_Email_Settings():
 
     try:
-        config = ConfigParser.ConfigParser()
+        config = configparser.ConfigParser()
         config.optionxform=str   #By default config returns keys from Settings file in lower case. This line preserves the case for keys
         config.read(settings_File_Path)
 
@@ -41,8 +42,8 @@ def read_Email_Settings():
         PASSWORD = config.get("EMAIL","PASSWORD")
 
     except Exception as error_msg:
-        print "Error while trying to read SMTP/EMAIL Settings."
-        print {"Error" : str(error_msg)}
+        print ("Error while trying to read SMTP/EMAIL Settings.")
+        print ({"Error" : str(error_msg)})
 #=====================================================================================
 
 read_Email_Settings()
@@ -51,7 +52,10 @@ read_Email_Settings()
 class Class_eMail():
     
     def __init__(self):
-        self.session = smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT)
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+        self.session = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        self.session.ehlo()
+        self.session.starttls(context=context)
         self.session.ehlo()
         self.session.login(USERNAME, PASSWORD)
 
