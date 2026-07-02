@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+
+# Simple script to test sending emails
+# Forked from below:
 ##------------------------------------------
 ##--- Author: Pradeep Singh
 ##--- Blog: https://iotbytes.wordpress.com/programmatically-send-e-mail-from-raspberry-pi-using-python-and-gmail/
@@ -6,20 +10,16 @@
 ##--- Python Ver: 2.7
 ##------------------------------------------
 
-
-
-#import the class definition from "email_handler.py" file
+# import the class definition from "email_handler.py" file
 from email_handler import Class_eMail
 
-#set the email ID where you want to send the test email 
+# set the email ID where you want to send the test email 
 To_Email_ID = ""
-
 
 # Send Plain Text Email 
 email = Class_eMail()
 email.send_Text_Mail(To_Email_ID, 'Plain Text Mail Subject', 'This is sample plain test email body.')
 del email
-
 
 # Send HTML Email
 email = Class_eMail()
